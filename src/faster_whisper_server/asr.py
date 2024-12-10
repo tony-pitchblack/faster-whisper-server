@@ -37,7 +37,10 @@ class FasterWhisperASR:
             word_timestamps=True,
             **self.transcribe_opts,
         )
+        logger.info(f"Transcribed segments: {segments}")
+        logger.info(f"Transcription info: {transcription_info}")
         segments = TranscriptionSegment.from_faster_whisper_segments(segments)
+        logger.info(f"Processed segments: {segments}")
         words = TranscriptionWord.from_segments(segments)
         for word in words:
             word.offset(audio.start)
