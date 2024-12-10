@@ -284,6 +284,18 @@ async def transcribe_stream(
     if response_format is None:
         response_format = config.default_response_format
     await ws.accept()
+
+    # URL QUERY DEBUGGING
+    from urllib.parse import parse_qs
+    # Access the query parameters from the WebSocket request URL
+    query_string = ws.scope.get('query_string').decode('utf-8')
+
+    # Print the query string
+    print(f"Query String: {query_string}")
+    # Parse the query string into a dictionary
+    query_params = parse_qs(query_string)
+    print(f"Parsed Query Parameters: {query_params}") 
+
     transcribe_opts = {
         "language": language,
         "temperature": temperature,
