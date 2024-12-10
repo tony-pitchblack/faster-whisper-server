@@ -60,9 +60,11 @@ async def audio_transcriber(
         transcription, _ = await asr.transcribe(audio, prompt(confirmed))
         new_words = local_agreement.merge(confirmed, transcription)
         if len(new_words) > 0:
-            confirmed.extend(new_words)
-            yield confirmed
-    logger.debug("Flushing...")
-    confirmed.extend(local_agreement.unconfirmed.words)
-    yield confirmed
-    logger.info("Audio transcriber finished")
+                new_confirmed = Transcription()
+                new_confirmed.extend(new_words)
+                yield new_confirmed
+        logger.debug("Flushing...")
+        new_confirmed = Transcription()
+        new_confirmed.extend(local_agreement.unconfirmed.words)
+        yield new_confirmed
+        logger.info("Audio transcriber finished")
