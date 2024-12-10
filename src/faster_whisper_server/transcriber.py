@@ -64,8 +64,8 @@ async def audio_transcriber(
                 new_confirmed.extend(new_words)
                 logger.info(f"Confirmed: {new_confirmed.words}")
                 yield new_confirmed
-        logger.info(f"Flushing: {new_confirmed.words}")
         new_confirmed = Transcription()
         new_confirmed.extend(local_agreement.unconfirmed.words)
+        logger.info(f"Flushing: {new_confirmed.words}")
         yield new_confirmed
         logger.info("Audio transcriber finished")
