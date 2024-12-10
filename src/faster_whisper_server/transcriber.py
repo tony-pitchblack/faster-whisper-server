@@ -54,6 +54,16 @@ async def audio_transcriber(
     local_agreement = LocalAgreement()
     full_audio = Audio()
     confirmed = Transcription()
+
+    def log_first_last_words_timestamps(new_confirmed):
+        first_word = new_confirmed.words[0]
+        last_word = new_confirmed.words[-1]
+        logger.info(
+            f"\nConfirmed: "
+            f"first_word [{first_word.start}; {first_word.end}], "
+            f"last_word [{last_word.start}; {last_word.end}]"
+            )
+
     async for chunk in audio_stream.chunks(min_duration):
         full_audio.extend(chunk)
         audio = full_audio.after(needs_audio_after(confirmed))
@@ -62,10 +72,16 @@ async def audio_transcriber(
         if len(new_words) > 0:
                 new_confirmed = Transcription()
                 new_confirmed.extend(new_words)
-                logger.info(f"Confirmed: {new_confirmed.words}")
+
+                # logger.info(f"Confirmed: {new_confirmed.words}")
+                log_first_last_words_timestamps(new_confirmed)
+
                 yield new_confirmed
         new_confirmed = Transcription()
         new_confirmed.extend(local_agreement.unconfirmed.words)
-        logger.info(f"Flushing: {new_confirmed.words}")
+
+        # logger.info(f"Flushing: {new_confirmed.words}")
+        log_first_last_words_timestamps(new_confirmed)
+
         yield new_confirmed
         logger.info("Audio transcriber finished")
