@@ -240,7 +240,7 @@ async def audio_receiver(ws: WebSocket, audio_stream: AudioStream) -> None:
     try:
         while True:
             bytes_ = await asyncio.wait_for(ws.receive_bytes(), timeout=config.max_no_data_seconds)
-            logger.debug(f"Received {len(bytes_)} bytes of audio data")
+            # logger.debug(f"Received {len(bytes_)} bytes of audio data")
             audio_samples = audio_samples_from_file(BytesIO(bytes_))
             audio_stream.extend(audio_samples)
             if audio_stream.duration - config.inactivity_window_seconds >= 0:
