@@ -296,7 +296,7 @@ async def transcribe_stream(
         async with asyncio.TaskGroup() as tg:
             tg.create_task(audio_receiver(ws, audio_stream))
             async for transcription in audio_transcriber(asr, audio_stream, min_duration=config.min_duration):
-                logger.debug(f"Sending transcription: {transcription.text}")
+                logger.info(f"Sending transcription: {transcription.text}")
                 if ws.client_state == WebSocketState.DISCONNECTED:
                     break
 
